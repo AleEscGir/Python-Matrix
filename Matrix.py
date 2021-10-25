@@ -13,14 +13,14 @@ class Matrix:
             actual_row = []
             for j in range (columns):
                 actual_row.append(0)
-                setattr(type(self), f'_{i}_{j}', self.create_field(i,j) )
+                setattr(type(self), f'_{i}_{j}', self.create_property(i,j) )
             self.values.append(actual_row)
                 
 
-    def create_field( self, i, j):
-        def field_setter( self, value):
+    def create_property( self, i, j):
+        def property_setter( self, value):
             self.values[i][j] = value
-        return property (lambda self: self.values[i][j], field_setter)
+        return property (lambda self: self.values[i][j], property_setter)
 
     def __getitem__(self, pos):
 
@@ -113,7 +113,7 @@ class Iterator:
     def __next__(self):
         if self.there_is_next():
             i = self.current // self.matrix.columns
-            j = self.current % self.matrix.rows
+            j = self.current % self.matrix.columns
             value = self.matrix.values[i][j]
             self.current += 1
             return value
