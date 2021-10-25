@@ -11,9 +11,16 @@ class Matrix:
 
         for i in range (rows):
             actual_row = []
-            for i in range (columns):
+            for j in range (columns):
                 actual_row.append(0)
+                setattr(type(self), f'_{i}_{j}', self.create_property(i,j) )
             self.values.append(actual_row)
+                
+
+    def create_property( self, i, j):
+        def property_setter( self, value):
+            self.values[i][j] = value
+        return property (lambda self: self.values[i][j], property_setter)
 
     def __getitem__(self, pos):
 
@@ -28,6 +35,9 @@ class Matrix:
             raise Exception("Indices fuera del rango de la Matriz")
 
         self.values[pos[0]][pos[1]] = new_value
+
+    def __iter__(self):
+        return Iterator(self)
 
 
     def __add__(self, another):
@@ -85,6 +95,33 @@ class Matrix:
 
         return value_return
 
+class Iterator:
+
+    def __init__(self, matrix):
+        if not isinstance(matrix, Matrix):
+            raise Exception('Es un iterador de Matrix.')
+
+        self.matrix = matrix
+        self.current = 0
+
+    def there_is_next(self):
+        return self.current < self.matrix.rows * self.matrix.columns
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.there_is_next():
+            i = self.current // self.matrix.columns
+            j = self.current % self.matrix.columns
+            value = self.matrix.values[i][j]
+            self.current += 1
+            return value
+        else:
+            self.current = 0
+            raise StopIteration('Terminamos de iterar')
+
+
 if __name__ == '__main__':
     print("Bienvenido al tester de mi matris de python \nInicialmente creemos dos matrices")
     
@@ -115,3 +152,4 @@ if __name__ == '__main__':
     print("Matris A + B: \n" + str(matrizA + matrizB))
     print("Matris A - B: \n" + str(matrizA - matrizB))
     print("Matris A * B: \n" + str(matrizA * matrizB))
+
