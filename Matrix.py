@@ -1,3 +1,8 @@
+import re 
+
+INDEX_PATT = r"^_(\d+)_(\d+)$"
+
+
 class Matrix:
 
     def __init__(self, rows, columns):
@@ -13,14 +18,28 @@ class Matrix:
             actual_row = []
             for j in range (columns):
                 actual_row.append(0)
-                setattr(type(self), f'_{i}_{j}', self.create_property(i,j) )
             self.values.append(actual_row)
                 
 
-    def create_property( self, i, j):
-        def property_setter( self, value):
+    def __getattr__(self, item):
+        match = re.match( INDEX_PATT, item)
+        if match:
+            i = int(match.groups()[0])
+            j = int(match.groups()[1])
+            if(i < 0 or i >= self.rows or j < 0 or j >= self.columns):
+                raise Exception("Indices fuera del rango de la Matriz")
+            return self.values[i][j]
+        return self.__getattribute__(item)
+
+    def __setattr__(self, item, value):
+        match = re.match( INDEX_PATT, item)
+        if match:
+            i = int(match.groups()[0])
+            j = int(match.groups()[1])
+            if(i < 0 or i >= self.rows or j < 0 or j >= self.columns):
+                raise Exception("Indices fuera del rango de la Matriz")
             self.values[i][j] = value
-        return property (lambda self: self.values[i][j], property_setter)
+        super().__setattr__(item,value)
 
     def __getitem__(self, pos):
 
@@ -122,3 +141,28 @@ class Iterator:
             raise StopIteration('Terminamos de iterar')
 
 
+m = Matrix(2, 2)
+
+    
+
+m[0,0], m._0_1, m[1,0], m[1,1] = 1, 2, 3, 4
+print(m)
+print()
+print(m._0_0)
+print()
+print(m._0_1)
+print()
+ 
+iterator = iter(m)
+while True:
+    try:
+        current = next(iterator)
+        print(current, end=' ')
+    except StopIteration:
+        print()
+        break
+
+
+for i in m:
+    print(i, end=' ')
+print()
