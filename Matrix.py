@@ -98,6 +98,7 @@ class Matrix:
                 actual_sum = 0
                 for k in range (self.columns):
                     actual_sum = actual_sum + (self[i,k] * another[k, j])
+                    mul[i,j] = actual_sum
     
         return mul
 
@@ -112,7 +113,6 @@ class Matrix:
             value_return = value_return + "\n"
 
         return value_return
-
 
 class Iterator:
 
@@ -141,28 +141,54 @@ class Iterator:
             raise StopIteration('Terminamos de iterar')
 
 
-m = Matrix(2, 2)
+if __name__ == '__main__':
+    print("Bienvenido al tester de mi matris de python \nInicialmente creemos dos matrices")
+    
+    columnasA = int(input("cantidad de columnas de la matris A "))
+    filasA = int(input("cantidad de filas de la matris A "))
+    columnasB = int(input("cantidad de columnas de la matris B "))
+    filasB = int(input("cantidad de filas de la matris B "))
+    
+    matrizA = Matrix(filasA,columnasA)
+    matrizB = Matrix(filasB,columnasB)
+    
+    print("Ahora dame los valores de la matriz A")
+    
+    for i in range(filasA):
+        print("dame los valores de la fila: " + str(i))
+        for j in range(columnasA):
+            matrizA[i,j] = int(input("valor de la  posicion " + str(j) + "," + str(i) + ":"))
+    
+    print("Ahora dame los valores de la matriz B")
+    
+    for i in range(filasB):
+        print("dame los valores de la fila: " + str(i))
+        for j in range(columnasB):
+            matrizB[i,j] = int(input("valor de la  posicion " + str(j) + "," + str(i) + ":"))
+    
+    print("Matris A: \n" + str(matrizA))
+    print("Matris B: \n" + str(matrizB))
+    print("Matris A + B: \n" + str(matrizA + matrizB))
+    print("Matris A - B: \n" + str(matrizA - matrizB))
+    print("Matris A * B: \n" + str(matrizA * matrizB))
+
+    print("Iterando matriz A")
+    iterator = iter(matrizA)
+    while True:
+        try:
+            current = next(iterator)
+            print(current, end=' ')
+        except StopIteration:
+            print()
+            break
+
+    print("Iterando matriz B")
+    for i in matrizB:
+        print(i, end=' ')
 
     
 
-m[0,0], m._0_1, m[1,0], m[1,1] = 1, 2, 3, 4
-print(m)
-print()
-print(m._0_0)
-print()
-print(m._0_1)
-print()
+  
  
-iterator = iter(m)
-while True:
-    try:
-        current = next(iterator)
-        print(current, end=' ')
-    except StopIteration:
-        print()
-        break
 
 
-for i in m:
-    print(i, end=' ')
-print()
