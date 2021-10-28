@@ -1,7 +1,7 @@
 import re 
 
 INDEX_PATT = r"^_(\d+)_(\d+)$"
-
+INDEX_TYPE = r"^as_(\S+)$"
 
 class Matrix:
 
@@ -29,6 +29,14 @@ class Matrix:
             if(i < 0 or i >= self.rows or j < 0 or j >= self.columns):
                 raise Exception("Indices fuera del rango de la Matriz")
             return self.values[i][j]
+        match = re.match( INDEX_TYPE, item)
+        if match:
+            temp = Matrix(self.rows, self.columns)
+            
+            for i, item in enumerate(self):
+                temp[i // self.columns, i % self.columns] = eval(match.groups()[0]+"("+str(item)+")")
+                
+            return lambda: temp
         return self.__getattribute__(item)
 
     def __setattr__(self, item, value):
@@ -157,14 +165,18 @@ if __name__ == '__main__':
     for i in range(filasA):
         print("dame los valores de la fila: " + str(i))
         for j in range(columnasA):
-            matrizA[i,j] = int(input("valor de la  posicion " + str(j) + "," + str(i) + ":"))
+            matrizA[i,j] = input("valor de la  posicion " + str(j) + "," + str(i) + ":")
+    
     
     print("Ahora dame los valores de la matriz B")
     
     for i in range(filasB):
         print("dame los valores de la fila: " + str(i))
         for j in range(columnasB):
-            matrizB[i,j] = int(input("valor de la  posicion " + str(j) + "," + str(i) + ":"))
+            matrizB[i,j] = input("valor de la  posicion " + str(j) + "," + str(i) + ":")
+    
+    matrizA = matrizA.as_float()
+    matrizB = matrizB.as_float()
     
     print("Matris A: \n" + str(matrizA))
     print("Matris B: \n" + str(matrizB))
@@ -185,10 +197,3 @@ if __name__ == '__main__':
     print("Iterando matriz B")
     for i in matrizB:
         print(i, end=' ')
-
-    
-
-  
- 
-
-
