@@ -1,7 +1,7 @@
 import re 
 
 INDEX_PATT = r"^_(\d+)_(\d+)$"
-INDEX_TYPE = r"^as_(\S+)$"
+AS_TYPE_PATT = r"^as_(\S+)$"
 
 class Matrix:
 
@@ -29,7 +29,7 @@ class Matrix:
             if(i < 0 or i >= self.rows or j < 0 or j >= self.columns):
                 raise Exception("Indices fuera del rango de la Matriz")
             return self.values[i][j]
-        match = re.match( INDEX_TYPE, item)
+        match = re.match( AS_TYPE_PATT, item)
         if match:
             temp = Matrix(self.rows, self.columns)
             
